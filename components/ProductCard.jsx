@@ -1,28 +1,34 @@
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
+import { useNavigation } from 'expo-router';
 
 const ProductCard = ({ product }) => {
+
+  const navigation = useNavigation()
+
   // State to toggle description visibility
   const [showDescription, setShowDescription] = useState(false);
 
   return (
-    <View style={styles.container}>
-      {/* Product Image */}
+    <TouchableOpacity onPress={()=>{
+       navigation.navigate("PRODUCT_DETAILS", {product})
+    }} style={styles.container}>
+      
       <Image source={{ uri: product.mainImage }} style={styles.coverImage} />
 
-      {/* Product Information */}
+     
       <Text style={styles.name}>{product.name}</Text>
       <Text style={styles.brand}>{product.brandName}</Text>
       <Text style={styles.price}>
         {product.price.currency} {product.price.amount}
       </Text>
 
-      {/* Conditional stock status */}
+      
       <Text style={[styles.stockStatus, { color: product.stockStatus === 'IN STOCK' ? 'green' : 'red' }]}>
         {product.stockStatus}
       </Text>
 
-      {/* Sizes */}
+     
       <View style={styles.sizesContainer}>
         <Text style={styles.sizesLabel}>Sizes:</Text>
         {product.sizes.map((size, index) => (
@@ -32,22 +38,21 @@ const ProductCard = ({ product }) => {
         ))}
       </View>
 
-      {/* Color */}
+      
       <Text style={styles.color}>Color: {product.colour}</Text>
 
-      {/* Show More Button */}
-      <TouchableOpacity
+      
+      {/* <TouchableOpacity
         style={styles.showMoreButton}
         onPress={() => setShowDescription(!showDescription)}
       >
         <Text style={styles.showMoreText}>{showDescription ? 'Show Less' : 'Show More'}</Text>
       </TouchableOpacity>
 
-      {/* Description (conditionally rendered based on state) */}
-      {showDescription && (
+       {showDescription && (
         <Text style={styles.description}>{product.description}</Text>
-      )}
-    </View>
+      )} */}
+    </TouchableOpacity>
   );
 };
 
