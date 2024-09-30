@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeScreen from '../screens/HomeScreen';
@@ -9,6 +9,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProductDetailsScreen from '../screens/ProductDetailsScreen';
+import CartScreen from '../screens/CartScreen';
+import { CartContext, CartProvider } from '../context/context';
+
 
 
 const Tab = createBottomTabNavigator();
@@ -42,42 +45,54 @@ function MyHomeStack(){
 
 const index = () => {
   return (
-    <NavigationContainer independent={true} >
-      <Tab.Navigator screenOptions={{
-        headerShown: false, //hide header
-        tabBarShowLabel:false, //hide lable under the icon
-        tabBarActiveTintColor: "#ab1aff", //control appbar icon focuse color
-        }} >
-        <Tab.Screen name='HOME_STACK' component={MyHomeStack} options={{
-            tabBarIcon:({size, focused,color})=>{
-                return(
-                    <Entypo name={"home"} size={size} color={color} />
-                )
-            }
-            }} />
-        <Tab.Screen name='REORDER' component={Home} options={{
-            tabBarIcon:({size,color})=>{
-                return(
-                    <Ionicons name={"reorder-four"} size={size} color={color} />
-                )
-            }
-            }} />
-        <Tab.Screen name='CART' component={Home} options={{
-            tabBarIcon:({size,color})=>{
-                return(
-                    <MaterialCommunityIcons name={"cart"} size={size} color={color} />
-                )
-            }
-            }} />
-        <Tab.Screen name='ACCOUNT' component={Home} options={{
-            tabBarIcon:({size,color})=>{
-                return(
-                    <FontAwesome6 name={"user"} size={size} color={color} />
-                )
-            }
-            }}/>
-      </Tab.Navigator>
-    </NavigationContainer>
+    <CartProvider>
+        <NavigationContainer independent={true} >
+        <Tab.Navigator 
+            screenOptions={{
+            headerShown: false, //hide header
+            tabBarShowLabel:false, //hide lable under the icon
+            tabBarActiveTintColor: "#ab1aff", //control appbar icon focuse color
+            }} 
+            initialRouteName='CART'
+            >
+            <Tab.Screen name='HOME_STACK' component={MyHomeStack} options={{
+                tabBarIcon:({size, focused,color})=>{
+                    return(
+                        <Entypo name={"home"} size={size} color={color} />
+                    )
+                }
+                }} />
+            <Tab.Screen name='REORDER' component={Home} options={{
+                tabBarIcon:({size,color})=>{
+                    return(
+                        <Ionicons name={"reorder-four"} size={size} color={color} />
+                    )
+                }
+                }} />
+            <Tab.Screen name='CART' component={CartScreen} options={{
+                tabBarIcon:({size,color})=>{
+                    const {carts} = useContext(CartContext);
+                  
+                    return(
+                        <View style={{position:"relative"}} >
+                            <MaterialCommunityIcons name={"cart"} size={size} color={color} />
+                            <View style={{height:14, width:14, borderRadius:7, backgroundColor:"red",justifyContent:"center",alignItems:"center",position:"absolute",top:-8,right:-5}} >
+                                <Text style={{fontSize:12,color:"white",fontWeight:500}} >{carts.length}</Text>
+                            </View>
+                        </View>
+                    )
+                }
+                }} />
+            <Tab.Screen name='ACCOUNT' component={Home} options={{
+                tabBarIcon:({size,color})=>{
+                    return(
+                        <FontAwesome6 name={"user"} size={size} color={color} />
+                    )
+                }
+                }}/>
+        </Tab.Navigator>
+        </NavigationContainer>
+    </CartProvider>
   )
 }
 

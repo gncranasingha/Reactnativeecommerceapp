@@ -1,13 +1,23 @@
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from '../components/Header'; 
+import { CartContext } from '../context/context';
+import { useNavigation } from 'expo-router';
 
 
 const ProductDetailsScreen = ({ route }) => {
-  const [selectedSize, setSelectedSize] = useState(null);  // State to manage the selected size
 
+  const navigation = useNavigation();
+  const [selectedSize, setSelectedSize] = useState(null);  // State to manage the selected size
   const { product } = route.params;
+
+  const {addCart} = useContext(CartContext)
+  const handleAddToCart = (product) => {
+    product.size = selectedSize;
+    addCart(product);
+    navigation.navigate("CART")
+  }
 
   return (
     <LinearGradient colors={['#f5f9fc', '#efe5ff']} style={styles.container}>
@@ -56,7 +66,9 @@ const ProductDetailsScreen = ({ route }) => {
           <Text style={styles.sectionTitle}>Description</Text>
           <Text style={styles.description}>{product.description}</Text>
            {/* button container */}
-           <TouchableOpacity style={styles.button} >
+           <TouchableOpacity  onPress={()=> {
+              handleAddToCart(product)
+           }} style={styles.button} >
              <Text style={styles.buttontext} >Add to Cart</Text>
            </TouchableOpacity>
         </View>
