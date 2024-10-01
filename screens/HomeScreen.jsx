@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, FlatList } from 'react-native';
+import { View, Text, TextInput, FlatList } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -25,15 +25,19 @@ const HomeScreen = () => {
   }, [selectedCategory, products]);
 
   return (
-    <LinearGradient colors={['#f5f9fc', '#efe5ff']} style={styles.container}>
+    <LinearGradient colors={['#f5f9fc', '#efe5ff']} className="p-5">
       <Header />
-      <Text style={styles.matchText}>Match Your Style</Text>
+      <Text className="text-3xl text-black mt-6">Match Your Style</Text>
       {/* Input container */}
-      <View style={styles.inputContainer}>
-        <View style={styles.iconContainer}>
+      <View className="bg-white h-12 rounded-lg flex-row items-center mb-5">
+        <View className="mx-4">
           <Fontisto name={"search"} size={20} color={"#C0C0C0"} />
         </View>
-        <TextInput style={styles.textInput} placeholder="Search" placeholderTextColor="#C0C0C0" />
+        <TextInput 
+          className="flex-1 text-lg" 
+          placeholder="Search" 
+          placeholderTextColor="#C0C0C0" 
+        />
       </View>
       {/* Category section */}
       <FlatList
@@ -47,17 +51,17 @@ const HomeScreen = () => {
         )}
         keyExtractor={(item) => item}
         horizontal={true}
-        showsHorizontalScrollIndicator={false} // Remove scroll 
+        showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
       {/* Product List */}
       <FlatList
-        data={filteredProducts} // Use filtered products
+        data={filteredProducts}
         renderItem={({ item }) => (
-          <ProductCard product={item} /> // Pass each product to the ProductCard
+          <ProductCard product={item} />
         )}
-        keyExtractor={(item) => item.id.toString()} // Ensure key is a string
-        numColumns={2} // Display products in two columns
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         contentContainerStyle={{ paddingBottom: 230 }}
         showsVerticalScrollIndicator={false}
@@ -67,29 +71,3 @@ const HomeScreen = () => {
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  matchText: {
-    fontSize: 28,
-    color: "#000000",
-    marginTop: 25,
-  },
-  inputContainer: {
-    backgroundColor: "#FFFFFF",
-    height: 48,
-    borderRadius: 12,
-    alignItems: "center",
-    flexDirection: "row",
-    marginVertical: 20,
-  },
-  iconContainer: {
-    marginHorizontal: 15,
-  },
-  textInput: {
-    flex: 1,
-    fontSize: 20,
-  },
-})

@@ -1,142 +1,49 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Image, Text, View, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from 'expo-router';
 
 const ProductCard = ({ product }) => {
-
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   // State to toggle description visibility
   const [showDescription, setShowDescription] = useState(false);
 
   return (
-    <TouchableOpacity onPress={()=>{
-       navigation.navigate("PRODUCT_DETAILS", {product})
-    }} style={styles.container}>
-      
-      <Image source={{ uri: product.mainImage }} style={styles.coverImage} />
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("PRODUCT_DETAILS", { product });
+      }}
+      className="flex-1 p-3 rounded-lg bg-white my-2 mx-1 shadow-md justify-between"
+    >
+      <Image source={{ uri: product.mainImage }} className="h-24 w-32 rounded-lg mb-2" />
 
-     
-      <Text style={styles.name}>{product.name}</Text>
-      <Text style={styles.brand}>{product.brandName}</Text>
-      <Text style={styles.price}>
+      <Text className="text-lg font-bold mb-1">{product.name}</Text>
+      <Text className="text-base text-gray-600 mb-1">{product.brandName}</Text>
+      <Text className="text-base font-bold mb-1">
         {product.price.currency} {product.price.amount}
       </Text>
 
-      
-      <Text style={[styles.stockStatus, { color: product.stockStatus === 'IN STOCK' ? 'green' : 'red' }]}>
+      <Text className={`text-base font-bold mb-2 ${product.stockStatus === 'IN STOCK' ? 'text-green-500' : 'text-red-500'}`}>
         {product.stockStatus}
       </Text>
 
-     
-      <View style={styles.sizesContainer}>
-        <Text style={styles.sizesLabel}>Sizes:</Text>
-        {product.sizes.map((size, index) => (
-          <Text key={index} style={styles.size}>
-            {size}
-          </Text>
-        ))}
-      </View>
-
       
-      <Text style={styles.color}>Color: {product.colour}</Text>
 
-      
+      <Text className="text-base mb-2">Color: {product.colour}</Text>
+
+      {/* Uncomment below to show/hide description */}
       {/* <TouchableOpacity
-        style={styles.showMoreButton}
+        className="mt-2 bg-gray-300 p-2 rounded"
         onPress={() => setShowDescription(!showDescription)}
       >
-        <Text style={styles.showMoreText}>{showDescription ? 'Show Less' : 'Show More'}</Text>
+        <Text className="text-base font-bold text-indigo-600">{showDescription ? 'Show Less' : 'Show More'}</Text>
       </TouchableOpacity>
 
-       {showDescription && (
-        <Text style={styles.description}>{product.description}</Text>
+      {showDescription && (
+        <Text className="text-base text-gray-600 mt-2">{product.description}</Text>
       )} */}
     </TouchableOpacity>
   );
 };
 
 export default ProductCard;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    marginVertical: 10,
-    marginHorizontal:2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 2,
-    justifyContent: 'space-between',
-   
-  },
-  coverImage: {
-    height: 100,
-    width: 130,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  brand: {
-    fontSize: 16,
-    color: '#555',
-    marginBottom: 5,
-  },
-  price: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#000',
-  },
-  stockStatus: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  sizesContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  sizesLabel: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginRight: 5,
-  },
-  size: {
-    fontSize: 14,
-    marginRight: 5,
-    backgroundColor: '#f0f0f0',
-    padding: 5,
-    borderRadius: 5,
-  },
-  color: {
-    fontSize: 14,
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 14,
-    color: '#777',
-    marginTop: 10,  // Add margin for spacing
-  },
-  showMoreButton: {
-    marginTop: 10,
-    backgroundColor: '#ddd',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  showMoreText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#ab1aff',
-  },
-});

@@ -1,186 +1,76 @@
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from '../components/Header'; 
 import { CartContext } from '../context/context';
 import { useNavigation } from 'expo-router';
 
-
 const ProductDetailsScreen = ({ route }) => {
-
   const navigation = useNavigation();
   const [selectedSize, setSelectedSize] = useState(null);  // State to manage the selected size
   const { product } = route.params;
+  const { addCart } = useContext(CartContext);
 
-  const {addCart} = useContext(CartContext);
-  
   const handleAddToCart = (product) => {
-    product.size = selectedSize;
-    addCart(product);
-    navigation.navigate("CART")
-  }
+    if (product.stockStatus === 'IN STOCK') {
+      product.size = selectedSize;
+      addCart(product);
+      navigation.navigate("CART");
+    }
+  };
 
   return (
-    <LinearGradient colors={['#f5f9fc', '#efe5ff']} style={styles.container}>
-      <View style={styles.headerContainer}>
+    <LinearGradient colors={['#f5f9fc', '#efe5ff']} className="flex-1">
+      <View className="p-5">
         <Header />
       </View>
 
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-       
-        <Image source={{ uri: product.mainImage }} style={styles.image} />
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 30 }}>
+        <Image source={{ uri: product.mainImage }} className="w-full h-72 rounded-lg mb-5" />
 
-        
-        <View style={styles.detailsContainer}>
-          <Text style={styles.productName}>{product.name}</Text>
-          <Text style={styles.brand}>{product.brandName}</Text>
-          <Text style={styles.price}>
+        <View className="bg-white rounded-lg p-5 shadow-md">
+          <Text className="text-2xl font-bold text-gray-800 mb-2">{product.name}</Text>
+          <Text className="text-xl text-gray-600 mb-1">{product.brandName}</Text>
+          <Text className="text-xl font-bold text-[#5A67D8] mb-2">
             {product.price.currency} {product.price.amount}
           </Text>
 
-          <Text style={[styles.stockStatus, { color: product.stockStatus === 'IN STOCK' ? 'green' : 'red' }]}>
+          <Text className={`text-lg font-bold mb-2 ${product.stockStatus === 'IN STOCK' ? 'text-green-600' : 'text-red-600'}`}>
             {product.stockStatus}
           </Text>
 
-          
-          <View style={styles.sizesContainer}>
-            <Text style={styles.sizesLabel}>Sizes:</Text>
+          <View className="flex-row items-center mb-2">
+            <Text className="text-lg font-bold mr-2">Sizes:</Text>
             {product.sizes.map((size, index) => (
               <TouchableOpacity
                 key={index}
-                onPress={() => setSelectedSize(size)
-                   
-                }  
-                style={[
-                  styles.sizeButton,
-                  selectedSize === size ? styles.selectedSize : styles.unselectedSize,  
-                ]}
+                onPress={() => setSelectedSize(size)}
+                className={`mr-2 px-3 py-2 rounded-lg ${selectedSize === size ? 'bg-[#ab1aff] text-white' : 'bg-gray-200 text-black'}`}
               >
-                <Text style={styles.sizeText}>{size}</Text>
+                <Text className="text-sm">{size}</Text>
               </TouchableOpacity>
             ))}
           </View>
 
-          <Text style={styles.color}>Color: {product.colour}</Text>
+          <Text className="text-lg mb-2">Color: {product.colour}</Text>
 
-       
-          <Text style={styles.sectionTitle}>Description</Text>
-          <Text style={styles.description}>{product.description}</Text>
-           {/* button container */}
-           <TouchableOpacity  onPress={()=> {
-              handleAddToCart(product)
-           }} style={styles.button} >
-             <Text style={styles.buttontext} >Add to Cart</Text>
-           </TouchableOpacity>
+          <Text className="text-lg font-bold mt-4 mb-2">Description</Text>
+          <Text className="text-sm text-gray-600">{product.description}</Text>
+
+          {/* Button container */}
+          <TouchableOpacity
+            onPress={() => handleAddToCart(product)}
+            className={`py-3 rounded-full mt-5 ${product.stockStatus === 'OUT OF STOCK' ? 'bg-gray-400' : 'bg-[#ab1aff]'}`} // Change button color when out of stock
+            disabled={product.stockStatus === 'OUT OF STOCK'} // Disable the button
+          >
+            <Text className="text-xl font-semibold text-white text-center">
+              {product.stockStatus === 'OUT OF STOCK' ? 'Out of Stock' : 'Add to Cart'}
+            </Text>
+          </TouchableOpacity>
         </View>
-       
-
       </ScrollView>
     </LinearGradient>
   );
 };
 
 export default ProductDetailsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  headerContainer: {
-    padding: 20,
-  },
-  contentContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-  },
-  image: {
-    width: '100%',
-    height: 300,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  detailsContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    elevation: 3,
-  },
-  productName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  brand: {
-    fontSize: 18,
-    color: '#555',
-    marginBottom: 5,
-  },
-  price: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#5A67D8',
-    marginBottom: 10,
-  },
-  stockStatus: {
-    fontSize: 14,
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
-  sizesContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  sizesLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginRight: 5,
-  },
-  sizeButton: {
-    marginRight: 10,
-    padding: 10,
-    borderRadius: 5,
-    
-  },
-  selectedSize: {
-    backgroundColor: '#ab1aff', 
-    color: '#fff',  
-   
-  },
-  unselectedSize: {
-    backgroundColor: '#f0f0f0',
-     
-  },
-//   sizeText: {
-//     fontSize: 14,
-   
-//   },
-  color: {
-    fontSize: 14,
-    marginBottom: 10,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 14,
-    color: '#777',
-  },
-  button:{
-    backgroundColor:"#ab1aff",
-    padding:10,
-    margin:10,
-    borderRadius:20
-  },
-  buttontext:{
-    fontSize:24,
-    fontWeight:"600",
-    color:"white",
-    textAlign:"center"
-  }
-
-});

@@ -1,23 +1,17 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 
 const Category = ({ item, selectedCategory, setSelectedCategory }) => {
   return (
     <TouchableOpacity
       onPress={() => setSelectedCategory(item)}
-      style={[
-        styles.categoryContainer,
-        selectedCategory === item && {
-          backgroundColor: '#ab1aff',
-        },
-      ]}
+      className={`rounded-lg bg-gray-300 mx-2 h-10 justify-center px-4 ${
+        selectedCategory === item ? 'bg-purple-600' : ''
+      }`}
     >
-      <Text style={[
-        styles.CategoryText,
-        selectedCategory === item && {
-          color: '#FFFFFF',
-        },
-      ]}>
+      <Text className={`text-base font-semibold text-center ${
+        selectedCategory === item ? 'text-white' : 'text-gray-600'
+      }`}>
         {item}
       </Text>
     </TouchableOpacity>
@@ -25,21 +19,3 @@ const Category = ({ item, selectedCategory, setSelectedCategory }) => {
 };
 
 export default Category;
-
-const styles = StyleSheet.create({
-    categoryContainer: {
-      borderRadius: 16,
-      backgroundColor: '#DFDCDC', 
-      marginHorizontal: 10,
-      height: 40, 
-      justifyContent: 'center', 
-      paddingHorizontal: 10, 
-    },
-    CategoryText: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: '#938F8F',
-      textAlign: 'center',
-    },
-  });
-  
