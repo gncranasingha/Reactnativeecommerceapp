@@ -31,7 +31,7 @@ function MyHomeStack(){
     return(
         <Stack.Navigator 
             screenOptions={{
-                // headerShown: false,
+                 headerShown: false,
             }}
         >
             <Stack.Screen name="HOME" component={HomeScreen} />
@@ -53,7 +53,7 @@ const index = () => {
             tabBarShowLabel:false, //hide lable under the icon
             tabBarActiveTintColor: "#ab1aff", //control appbar icon focuse color
             }} 
-            initialRouteName='CART'
+            initialRouteName=''
             >
             <Tab.Screen name='HOME_STACK' component={MyHomeStack} options={{
                 tabBarIcon:({size, focused,color})=>{

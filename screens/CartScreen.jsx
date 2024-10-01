@@ -7,7 +7,7 @@ import { TouchableOpacity } from 'react-native';
 import { CartContext } from '../context/context';
 
 const CartScreen = () => {
-  const {carts} = useContext(CartContext)
+  const {carts, totalPrice,deleteItemFromCart} = useContext(CartContext)
   return (
     <LinearGradient colors={['#f5f9fc', '#efe5ff']} style={styles.container}>
       <View style={styles.headerContainer}>
@@ -15,17 +15,16 @@ const CartScreen = () => {
       </View>
      
       <FlatList data={carts} 
-        ListHeaderComponent={
-          <>
-            
-          </>
-        } renderItem={CartCard}
+        ListHeaderComponent={<></>} 
+        renderItem={({item}) =>(
+          <CartCard  item={item} deleteItemFromCart={deleteItemFromCart}/>
+        )}
         ListFooterComponent={
           <>
             <View  style={styles.priceContainer}>
               <View style={styles.priceAndTitle}>
                 <Text style={styles.text} >Total:</Text>
-                <Text style={styles.text} >107.5</Text>
+                <Text style={styles.text} >{totalPrice}</Text>
               </View>
               <View style={styles.priceAndTitle} >
                 <Text style={styles.text} >Shipping:</Text>
@@ -35,7 +34,7 @@ const CartScreen = () => {
               <View style={styles.divider} />
               <View style={styles.priceAndTitle} >
                 <Text style={styles.text} >Grand Total:</Text>
-                <Text style={[styles.text,{color:"black", fontWeight:"700"}]} >107.5</Text>
+                <Text style={[styles.text,{color:"black", fontWeight:"700"}]} >{totalPrice}</Text>
               </View>
           </>
         }

@@ -12,7 +12,8 @@ const ProductDetailsScreen = ({ route }) => {
   const [selectedSize, setSelectedSize] = useState(null);  // State to manage the selected size
   const { product } = route.params;
 
-  const {addCart} = useContext(CartContext)
+  const {addCart} = useContext(CartContext);
+  
   const handleAddToCart = (product) => {
     product.size = selectedSize;
     addCart(product);
